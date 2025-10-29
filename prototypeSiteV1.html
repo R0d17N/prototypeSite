@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прототип - Форум для твоего вуза</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+        :root {
+            --primary-color: #9b59b6;
+            --primary-color-dark: #8e44ad;
+            --secondary-color: #34495e;
+            --background-start: #1a1a2e;
+            --background-mid: #3c1a4e;
+            --background-end: #1a1a2e;
+            --text-color: #e0e0e0;
+            --card-background: rgba(44, 62, 80, 0.85);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color);
+            overflow-x: hidden;
+            background: linear-gradient(-45deg, var(--background-start), var(--background-mid), var(--secondary-color), var(--background-end));
+            background-size: 400% 400%;
+            animation: gradientBG 20s ease infinite;
+            position: relative;
+        }
+
+        /* --- СЕКЦИЯ ФОНОВЫХ АНИМАЦИЙ --- */
+        .bg-particles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden; }
+        .shape { position: absolute; bottom: -150px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; animation: float 25s infinite ease-in-out; }
+        .shape1 { width: 80px; height: 80px; left: 10%; animation-duration: 22s; animation-delay: 1s; }
+        .shape2 { width: 120px; height: 120px; left: 20%; animation-duration: 30s; animation-delay: 5s; }
+        .shape3 { width: 40px; height: 40px; left: 35%; animation-duration: 18s; animation-delay: 3s; }
+        .shape4 { width: 100px; height: 100px; left: 50%; animation-duration: 25s; animation-delay: 0s; }
+        .shape5 { width: 60px; height: 60px; left: 70%; animation-duration: 28s; animation-delay: 2s; }
+        .shape6 { width: 90px; height: 90px; left: 85%; animation-duration: 20s; animation-delay: 6s; }
+        .shape7 { width: 50px; height: 50px; left: 5%; animation-duration: 35s; animation-delay: 8s; }
+
+        .chat-feed-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; pointer-events: none; }
+        .chat-bubble { position: absolute; background-color: rgba(44, 62, 80, 0.7); backdrop-filter: blur(2px); border-radius: 15px; padding: 10px; opacity: 0; animation: scrollFeed 20s linear infinite; }
+        .chat-bubble .text-line { height: 8px; background-color: rgba(224, 224, 224, 0.3); border-radius: 4px; margin-bottom: 6px; }
+        .chat-bubble .text-line:last-child { margin-bottom: 0; }
+        .chat-bubble.short .text-line { width: 80px; }
+        .chat-bubble.long .text-line { width: 150px; }
+        .chat-bubble.short .text-line.s2 { width: 50px; }
+        .chat-bubble.long .text-line.s2 { width: 120px; }
+        .chat-bubble.b1 { left: 15%; animation-duration: 25s; animation-delay: 0s; }
+        .chat-bubble.b2 { left: 70%; animation-duration: 30s; animation-delay: 5s; border-radius: 15px 15px 0 15px; }
+        .chat-bubble.b3 { left: 40%; animation-duration: 22s; animation-delay: 8s; }
+        .chat-bubble.b4 { left: 80%; animation-duration: 28s; animation-delay: 12s; border-radius: 15px 15px 0 15px; }
+        .chat-bubble.b5 { left: 5%; animation-duration: 35s; animation-delay: 15s; }
+        .chat-bubble.b6 { left: 60%; animation-duration: 20s; animation-delay: 18s; border-radius: 15px 15px 0 15px; }
+
+        @keyframes scrollFeed { 0% { transform: translateY(110vh); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-110vh); opacity: 0; } }
+        @keyframes float { 0% { transform: translateY(0); } 100% { transform: translateY(-120vh) rotate(720deg); opacity: 0; } }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .container { z-index: 1; position: relative; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        main, footer { z-index: 1; position: relative; }
+        header { z-index: 1001; position: relative; display: flex; justify-content: space-between; align-items: center; padding: 20px 0; animation: fadeInDown 1s ease-in-out; }
+        .logo { display: flex; align-items: center; }
+        .logo img { width: 50px; height: 50px; margin-right: 15px; animation: rotateIn 1.5s ease-in-out; }
+        .logo h1 { font-size: 2rem; }
+        
+        nav.desktop-nav ul { list-style: none; display: flex; }
+        nav.desktop-nav ul li { margin-left: 30px; }
+        nav.desktop-nav ul li a { text-decoration: none; color: var(--text-color); font-weight: 500; transition: color 0.3s ease; }
+        
+        .hero { text-align: center; padding: 100px 0; animation: fadeInUp 1s ease-in-out; }
+        .hero h2 { font-size: 3.5rem; margin-bottom: 20px; line-height: 1.2; height: 160px; }
+        .typing-cursor::after { content: '|'; color: var(--primary-color); animation: blink 0.7s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        .hero p { font-size: 1.2rem; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            margin: 5px;
+            cursor: pointer;
+            position: relative;
+            background: linear-gradient(45deg, var(--primary-color-dark), var(--primary-color), var(--primary-color-dark));
+            background-size: 200% auto;
+            background-position: 100% 0;
+            box-shadow: 0 0 8px rgba(155, 89, 182, 0.5);
+            transition: background-position 0.5s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .features { padding: 80px 0; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .feature-card { background-color: var(--card-background); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); padding: 30px; border-radius: 10px; text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .feature-card .icon { font-size: 3rem; color: var(--primary-color); margin-bottom: 20px; }
+        .feature-card h3 { font-size: 1.5rem; margin-bottom: 15px; }
+
+        .app-showcase { padding: 80px 0; background-color: rgba(44, 62, 80, 0.5); }
+        /* ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ БЛОКА С ПРИЛОЖЕНИЕМ */
+        .showcase-inner { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; /* Центрируем для лучшего вида */
+            flex-wrap: wrap; 
+            gap: 50px; /* Добавляем отступ между блоками */
+        }
+        .showcase-text { 
+            flex: 1 1 400px; /* Гибкая основа для текста */
+            max-width: 500px; /* Ограничиваем максимальную ширину */
+        }
+        .showcase-text h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        .showcase-text ul { padding-left: 20px; }
+        .showcase-text ul li { margin-bottom: 10px; }
+
+        .showcase-images { 
+            position: relative; 
+            height: 500px;
+            flex: 1 1 400px; /* Гибкая основа для картинок */
+            max-width: 500px; /* Ограничиваем максимальную ширину */
+            min-height: 400px; /* Минимальная высота, чтобы картинки не сжимались */
+        }
+        .showcase-images img { position: absolute; width: 250px; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); transition: transform 0.5s ease, z-index 0.5s ease; }
+        .showcase-images img:nth-child(1) { transform: rotate(-10deg) translate(-50%, -50%); top: 50%; left: 40%; z-index: 2; }
+        .showcase-images img:nth-child(2) { transform: rotate(5deg) translate(-50%, -50%); top: 50%; left: 60%; z-index: 1; }
+        .showcase-images img:nth-child(3) { transform: rotate(15deg) translate(-50%, -50%); top: 50%; left: 50%; z-index: 3; }
+        
+        .call-to-action { padding: 80px 0; text-align: center; background: linear-gradient(45deg, var(--primary-color), var(--primary-color-dark)); }
+        .call-to-action h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        
+        footer { background-color: var(--secondary-color); padding: 40px 20px; text-align: center;}
+
+        /* ОТКЛЮЧЕНИЕ HOVER-ЭФФЕКТОВ ДЛЯ ТЕЛЕФОНОВ */
+        @media (hover: hover) and (pointer: fine) {
+            .cta-button:hover {
+                background-position: 0 0;
+                transform: translateY(-3px);
+                box-shadow: 0 0 15px rgba(155, 89, 182, 0.8), 0 0 25px rgba(155, 89, 182, 0.5);
+            }
+            .feature-card:hover { 
+                transform: translateY(-10px); 
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
+            }
+            .showcase-images:hover img:nth-child(1) { 
+                transform: rotate(-15deg) translate(-60%, -55%) scale(1.05); 
+                z-index: 4; 
+            }
+            .showcase-images:hover img:nth-child(2) { 
+                transform: rotate(10deg) translate(-40%, -45%) scale(1.05); 
+            }
+            .showcase-images:hover img:nth-child(3) { 
+                transform: rotate(20deg) translate(-50%, -50%) scale(1.1); 
+                z-index: 5; 
+            }
+            nav.desktop-nav ul li a:hover { 
+                color: var(--primary-color); 
+            }
+        }
+        
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes rotateIn { from { opacity: 0; transform: rotate(-90deg) scale(0.5); } to { opacity: 1; transform: rotate(0) scale(1); } }
+        .animated { opacity: 0; transition: all 0.7s ease-out; }
+        .fadeIn { transform: translateY(20px); }
+        .in-view { opacity: 1; transform: translateY(0); }
+
+        /* Стили для мобильного меню */
+        .hamburger-menu { display: none; cursor: pointer; z-index: 1002; }
+        .hamburger-menu .bar { width: 25px; height: 3px; background-color: var(--text-color); margin: 5px 0; transition: 0.4s; }
+        .mobile-nav { position: fixed; top: 0; right: -100%; width: 70%; height: 100vh; background-color: var(--secondary-color); z-index: 1000; transition: right 0.5s ease-in-out; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .mobile-nav.active { right: 0; }
+        .mobile-nav ul { list-style: none; padding: 0; text-align: center; }
+        .mobile-nav ul li { margin: 20px 0; }
+        .mobile-nav ul li a { text-decoration: none; color: var(--text-color); font-size: 1.5rem; font-weight: 500; transition: color 0.3s ease; }
+        .hamburger-menu.active .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+        .hamburger-menu.active .bar:nth-child(2) { opacity: 0; }
+        .hamburger-menu.active .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+
+        /* Адаптация под мобильные устройства */
+        @media (max-width: 768px) {
+            header { flex-direction: row; justify-content: space-between; align-items: center; }
+            .desktop-nav { display: none; }
+            .hamburger-menu { display: block; }
+            .hero { padding: 60px 0; }
+            .hero h2 { font-size: 2.5rem; height: auto; }
+            .hero p { font-size: 1rem; }
+            .section-title { font-size: 2rem; }
+            .features, .call-to-action, .app-showcase { padding: 60px 0; }
+            .showcase-inner { flex-direction: column; gap: 40px; text-align: center; }
+            .showcase-text { max-width: 100%; flex-basis: 100%; }
+            .showcase-text ul { text-align: left; display: inline-block; }
+            .showcase-images { flex-basis: 100%; width: 100%; height: 350px; margin-top: 30px; }
+            .showcase-images img { width: 180px; }
+            .showcase-images img:nth-child(1) { top: 50%; left: 30%; }
+            .showcase-images img:nth-child(2) { top: 50%; left: 70%; }
+            .showcase-images img:nth-child(3) { top: 55%; left: 50%; }
+            .shape5, .shape6, .shape7 { display: none; }
+            .chat-bubble.b4, .chat-bubble.b5, .chat-bubble.b6 { display: none; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="bg-particles-container">
+        <div class="shape shape1"></div> <div class="shape shape2"></div> <div class="shape shape3"></div>
+        <div class="shape shape4"></div> <div class="shape shape5"></div> <div class="shape shape6"></div>
+        <div class="shape shape7"></div>
+    </div>
+    
+    <div class="chat-feed-container">
+        <div class="chat-bubble long b1"> <div class="text-line"></div> <div class="text-line s2"></div> </div>
+        <div class="chat-bubble short b2"> <div class="text-line"></div> </div>
+        <div class="chat-bubble long b3"> <div class="text-line"></div> <div class="text-line s2"></div> <div class="text-line"></div> </div>
+        <div class="chat-bubble short b4"> <div class="text-line"></div> </div>
+        <div class="chat-bubble long b5"> <div class="text-line"></div> <div class="text-line s2"></div> </div>
+        <div class="chat-bubble short b6"> <div class="text-line"></div> <div class="text-line s2"></div> </div>
+    </div>
+
+    <header class="container">
+        <div class="logo"> <img src="Applogo.png" alt="Логотип Прототип"> <h1>Прототип</h1> </div>
+        
+        <nav class="desktop-nav">
+            <ul> 
+                <li><a href="#features">Возможности</a></li> 
+                <li><a href="#showcase">Демонстрация</a></li> 
+            </ul>
+        </nav>
+        
+        <div class="hamburger-menu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </header>
+    
+    <nav class="mobile-nav">
+        <ul>
+            <li><a href="#features">Возможности</a></li>
+            <li><a href="#showcase">Демонстрация</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="hero container">
+            <h2>Ваш Университет — <br>Ваш<span id="changing-letter">е</span> <span id="typing-text" class="typing-cursor"></span></h2>
+            <p>Прототип - это не просто форум. Это централизованная платформа для студентов, где можно обсуждать лекции, делиться проектами и всегда быть в курсе событий своего университета.</p>
+            <a href="#" class="cta-button">Скачать для iOS</a>
+            <a href="#" class="cta-button">Скачать для Android</a>
+        </section>
+
+        <section id="features" class="features container">
+            <h2 class="section-title">Почему “Прототип”?</h2>
+            <div class="features-grid">
+                <div class="feature-card animated fadeIn"> <div class="icon">💬</div> <h3>Форумы по предметам</h3> <p>Отдельные ветки для каждого курса и предмета. Задавайте вопросы, помогайте одногруппникам и готовьтесь к экзаменам вместе.</p> </div>
+                <div class="feature-card animated fadeIn" style="transition-delay: 0.2s;"> <div class="icon">👥</div> <h3>Профили и проекты</h3> <p>Создайте свой профиль, делитесь учебными проектами и находите единомышленников для совместной работы.</p> </div>
+                <div class="feature-card animated fadeIn" style="transition-delay: 0.4s;"> <div class="icon">🚀</div> <h3>Лента новостей</h3> <p>Будьте в курсе всех университетских событий: от научных конференций до студенческих вечеринок.</p> </div>
+            </div>
+        </section>
+
+        <section id="showcase" class="app-showcase">
+            <div class="container showcase-inner">
+                <div class="showcase-text animated fadeIn">
+                    <h2>Интуитивно понятный интерфейс</h2> <p>Мы разработали "Прототип" с упором на удобство использования. Вся необходимая информация всегда под рукой.</p>
+                    <ul> <li>Простая навигация по форумам</li> <li>Удобное создание новых постов</li> <li>Персонализированный профиль</li> </ul>
+                </div>
+                <div class="showcase-images animated fadeIn" style="transition-delay: 0.2s;"> <img src="mainpageScreen.jpg" alt="Главная страница"> <img src="forumScreen.jpg" alt="Экран форума"> <img src="postScreen.jpg" alt="Экран поста"> </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="features container">
+            <h2 class="section-title">Начать просто</h2>
+            <div class="features-grid">
+                <div class="feature-card animated fadeIn"> <div class="icon">1️⃣</div> <h3>Скачайте приложение</h3> <p>Доступно для всех современных платформ.</p> </div>
+                <div class="feature-card animated fadeIn" style="transition-delay: 0.2s;"> <div class="icon">2️⃣</div> <h3>Зарегистрируйтесь</h3> <p>Используйте свою университетскую почту.</p> </div>
+                <div class="feature-card animated fadeIn" style="transition-delay: 0.4s;"> <div class="icon">3️⃣</div> <h3>Начните общение</h3> <p>Присоединяйтесь к обсуждениям и создавайте свои темы.</p> </div>
+            </div>
+        </section>
+
+        <section class="call-to-action">
+            <div class="container">
+                <h2>Готовы присоединиться?</h2> <p>Скачайте "Прототип" прямо сейчас и станьте частью самого активного студенческого сообщества!</p> <a href="#" class="cta-button">Скачать приложение</a>
+            </div>
+        </section>
+    </main>
+
+    <footer> 
+        <div class="container">
+            <p>&copy; 2025 Прототип. Все права защищены.</p> 
+        </div>
+    </footer>
+
+    <script>
+        // Анимация появления элементов при прокрутке
+        const animatedElements = document.querySelectorAll('.animated');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('in-view'); });
+        }, { threshold: 0.1 });
+        animatedElements.forEach(element => observer.observe(element));
+
+        // Анимация печати с изменением окончания
+        document.addEventListener('DOMContentLoaded', function() {
+            const typingTextElement = document.getElementById('typing-text');
+            const changingLetterElement = document.getElementById('changing-letter');
+            // ИСПРАВЛЕННЫЙ МАССИВ СЛОВ (с маленькой буквы)
+            const wordsToAnimate = [
+                { text: "общение.", letter: "е" }, { text: "идеи.", letter: "и" },
+                { text: "проекты.", letter: "и" }, { text: "знание.", letter: "е" },
+                { text: "будущее.", letter: "е" }
+            ]; 
+            let wordIndex = 0, charIndex = 0, isDeleting = false;
+            const typingSpeed = 150, deletingSpeed = 100, delayBetweenWords = 1500;
+
+            function type() {
+                const currentWordObject = wordsToAnimate[wordIndex];
+                changingLetterElement.textContent = currentWordObject.letter;
+                const currentWord = currentWordObject.text;
+                charIndex += isDeleting ? -1 : 1;
+                typingTextElement.textContent = currentWord.substring(0, charIndex);
+                let typeTimeout = isDeleting ? deletingSpeed : typingSpeed;
+
+                if (!isDeleting && charIndex === currentWord.length) {
+                    typeTimeout = delayBetweenWords;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    wordIndex = (wordIndex + 1) % wordsToAnimate.length;
+                    typeTimeout = 200; 
+                }
+                setTimeout(type, typeTimeout);
+            }
+            type();
+
+            // Управление мобильным меню
+            const hamburger = document.querySelector('.hamburger-menu');
+            const mobileNav = document.querySelector('.mobile-nav');
+            const navLinks = mobileNav.querySelectorAll('a');
+
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                mobileNav.classList.toggle('active');
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    mobileNav.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

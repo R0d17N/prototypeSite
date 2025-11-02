@@ -21,6 +21,11 @@
         html {
             scroll-behavior: smooth;
         }
+        
+        html,
+        body {
+            overflow-x: hidden;
+        }
 
         * {
             margin: 0;
@@ -31,7 +36,6 @@
         body {
             font-family: 'Montserrat', sans-serif;
             color: var(--text-color);
-            overflow-x: hidden;
             background: linear-gradient(-45deg, var(--background-start), var(--background-mid), var(--secondary-color), var(--background-end));
             background-size: 400% 400%;
             animation: gradientBG 20s ease infinite;
@@ -70,20 +74,18 @@
 
         .container { z-index: 1; position: relative; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         main, footer { z-index: 1; position: relative; }
-        header { z-index: 1001; position: relative; display: flex; justify-content: space-between; align-items: center; padding: 20px 0; animation: fadeInDown 1s ease-in-out; }
+        header { z-index: 1001; position: relative; display: flex; justify-content: flex-start; align-items: center; padding: 20px 0; animation: fadeInDown 1s ease-in-out; }
         .logo { display: flex; align-items: center; }
         .logo img { width: 50px; height: 50px; margin-right: 15px; animation: rotateIn 1.5s ease-in-out; }
         .logo h1 { font-size: 2rem; }
         
-        nav.desktop-nav ul { list-style: none; display: flex; }
-        nav.desktop-nav ul li { margin-left: 30px; }
-        nav.desktop-nav ul li a { text-decoration: none; color: var(--text-color); font-weight: 500; transition: color 0.3s ease; }
-        
         .hero { text-align: center; padding: 100px 0; animation: fadeInUp 1s ease-in-out; }
-        .hero h2 { font-size: 3.5rem; margin-bottom: 20px; line-height: 1.2; height: 160px; }
+        .hero h2 { font-size: 3.5rem; margin-bottom: 20px; line-height: 1.2; min-height: 160px; }
         .typing-cursor::after { content: '|'; color: var(--primary-color); animation: blink 0.7s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
         .hero p { font-size: 1.2rem; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+        .cta-buttons-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
 
         .cta-button {
             display: inline-block;
@@ -111,29 +113,13 @@
         .feature-card h3 { font-size: 1.5rem; margin-bottom: 15px; }
 
         .app-showcase { padding: 80px 0; background-color: rgba(44, 62, 80, 0.5); }
-        /* ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ БЛОКА С ПРИЛОЖЕНИЕМ */
-        .showcase-inner { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; /* Центрируем для лучшего вида */
-            flex-wrap: wrap; 
-            gap: 50px; /* Добавляем отступ между блоками */
-        }
-        .showcase-text { 
-            flex: 1 1 400px; /* Гибкая основа для текста */
-            max-width: 500px; /* Ограничиваем максимальную ширину */
-        }
+        .showcase-inner { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 50px; }
+        .showcase-text { flex: 1 1 400px; max-width: 500px; }
         .showcase-text h2 { font-size: 2.5rem; margin-bottom: 20px; }
         .showcase-text ul { padding-left: 20px; }
         .showcase-text ul li { margin-bottom: 10px; }
 
-        .showcase-images { 
-            position: relative; 
-            height: 500px;
-            flex: 1 1 400px; /* Гибкая основа для картинок */
-            max-width: 500px; /* Ограничиваем максимальную ширину */
-            min-height: 400px; /* Минимальная высота, чтобы картинки не сжимались */
-        }
+        .showcase-images { position: relative; height: 500px; flex: 1 1 400px; max-width: 500px; min-height: 400px; }
         .showcase-images img { position: absolute; width: 250px; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); transition: transform 0.5s ease, z-index 0.5s ease; }
         .showcase-images img:nth-child(1) { transform: rotate(-10deg) translate(-50%, -50%); top: 50%; left: 40%; z-index: 2; }
         .showcase-images img:nth-child(2) { transform: rotate(5deg) translate(-50%, -50%); top: 50%; left: 60%; z-index: 1; }
@@ -144,31 +130,12 @@
         
         footer { background-color: var(--secondary-color); padding: 40px 20px; text-align: center;}
 
-        /* ОТКЛЮЧЕНИЕ HOVER-ЭФФЕКТОВ ДЛЯ ТЕЛЕФОНОВ */
         @media (hover: hover) and (pointer: fine) {
-            .cta-button:hover {
-                background-position: 0 0;
-                transform: translateY(-3px);
-                box-shadow: 0 0 15px rgba(155, 89, 182, 0.8), 0 0 25px rgba(155, 89, 182, 0.5);
-            }
-            .feature-card:hover { 
-                transform: translateY(-10px); 
-                box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
-            }
-            .showcase-images:hover img:nth-child(1) { 
-                transform: rotate(-15deg) translate(-60%, -55%) scale(1.05); 
-                z-index: 4; 
-            }
-            .showcase-images:hover img:nth-child(2) { 
-                transform: rotate(10deg) translate(-40%, -45%) scale(1.05); 
-            }
-            .showcase-images:hover img:nth-child(3) { 
-                transform: rotate(20deg) translate(-50%, -50%) scale(1.1); 
-                z-index: 5; 
-            }
-            nav.desktop-nav ul li a:hover { 
-                color: var(--primary-color); 
-            }
+            .cta-button:hover { background-position: 0 0; transform: translateY(-3px); box-shadow: 0 0 15px rgba(155, 89, 182, 0.8), 0 0 25px rgba(155, 89, 182, 0.5); }
+            .feature-card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+            .showcase-images:hover img:nth-child(1) { transform: rotate(-15deg) translate(-60%, -55%) scale(1.05); z-index: 4; }
+            .showcase-images:hover img:nth-child(2) { transform: rotate(10deg) translate(-40%, -45%) scale(1.05); }
+            .showcase-images:hover img:nth-child(3) { transform: rotate(20deg) translate(-50%, -50%) scale(1.1); z-index: 5; }
         }
         
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
@@ -178,28 +145,20 @@
         .fadeIn { transform: translateY(20px); }
         .in-view { opacity: 1; transform: translateY(0); }
 
-        /* Стили для мобильного меню */
-        .hamburger-menu { display: none; cursor: pointer; z-index: 1002; }
-        .hamburger-menu .bar { width: 25px; height: 3px; background-color: var(--text-color); margin: 5px 0; transition: 0.4s; }
-        .mobile-nav { position: fixed; top: 0; right: -100%; width: 70%; height: 100vh; background-color: var(--secondary-color); z-index: 1000; transition: right 0.5s ease-in-out; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .mobile-nav.active { right: 0; }
-        .mobile-nav ul { list-style: none; padding: 0; text-align: center; }
-        .mobile-nav ul li { margin: 20px 0; }
-        .mobile-nav ul li a { text-decoration: none; color: var(--text-color); font-size: 1.5rem; font-weight: 500; transition: color 0.3s ease; }
-        .hamburger-menu.active .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
-        .hamburger-menu.active .bar:nth-child(2) { opacity: 0; }
-        .hamburger-menu.active .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
-
-        /* Адаптация под мобильные устройства */
+        /* --- АДАПТАЦИЯ ПОД МОБИЛЬНЫЕ УСТРОЙСТВА --- */
         @media (max-width: 768px) {
-            header { flex-direction: row; justify-content: space-between; align-items: center; }
-            .desktop-nav { display: none; }
-            .hamburger-menu { display: block; }
+            .container { padding: 0 15px; }
+            
             .hero { padding: 60px 0; }
-            .hero h2 { font-size: 2.5rem; height: auto; }
+            .hero h2 { font-size: 2.8rem; min-height: 0; }
             .hero p { font-size: 1rem; }
+
+            .cta-buttons-container { flex-direction: column; align-items: center; }
+            .cta-button { width: 80%; max-width: 300px; padding: 15px 20px; }
+
             .section-title { font-size: 2rem; }
             .features, .call-to-action, .app-showcase { padding: 60px 0; }
+
             .showcase-inner { flex-direction: column; gap: 40px; text-align: center; }
             .showcase-text { max-width: 100%; flex-basis: 100%; }
             .showcase-text ul { text-align: left; display: inline-block; }
@@ -208,6 +167,9 @@
             .showcase-images img:nth-child(1) { top: 50%; left: 30%; }
             .showcase-images img:nth-child(2) { top: 50%; left: 70%; }
             .showcase-images img:nth-child(3) { top: 55%; left: 50%; }
+            
+            .shape, .chat-bubble { animation: none !important; }
+
             .shape5, .shape6, .shape7 { display: none; }
             .chat-bubble.b4, .chat-bubble.b5, .chat-bubble.b6 { display: none; }
         }
@@ -232,34 +194,16 @@
 
     <header class="container">
         <div class="logo"> <img src="Applogo.png" alt="Логотип Прототип"> <h1>Прототип</h1> </div>
-        
-        <nav class="desktop-nav">
-            <ul> 
-                <li><a href="#features">Возможности</a></li> 
-                <li><a href="#showcase">Демонстрация</a></li> 
-            </ul>
-        </nav>
-        
-        <div class="hamburger-menu">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
     </header>
     
-    <nav class="mobile-nav">
-        <ul>
-            <li><a href="#features">Возможности</a></li>
-            <li><a href="#showcase">Демонстрация</a></li>
-        </ul>
-    </nav>
-
     <main>
         <section class="hero container">
-            <h2>Ваш Университет — <br>Ваш<span id="changing-letter">е</span> <span id="typing-text" class="typing-cursor"></span></h2>
+            <h2>Ваш Университет — Ваш<span id="changing-letter">е</span> <span id="typing-text" class="typing-cursor"></span></h2>
             <p>Прототип - это не просто форум. Это централизованная платформа для студентов, где можно обсуждать лекции, делиться проектами и всегда быть в курсе событий своего университета.</p>
-            <a href="#" class="cta-button">Скачать для iOS</a>
-            <a href="#" class="cta-button">Скачать для Android</a>
+            <div class.cta-buttons-container">
+                <a href="#" class="cta-button">Скачать для iOS</a>
+                <a href="#" class="cta-button">Скачать для Android</a>
+            </div>
         </section>
 
         <section id="features" class="features container">
@@ -311,11 +255,10 @@
         }, { threshold: 0.1 });
         animatedElements.forEach(element => observer.observe(element));
 
-        // Анимация печати с изменением окончания
+        // Анимация печати
         document.addEventListener('DOMContentLoaded', function() {
             const typingTextElement = document.getElementById('typing-text');
             const changingLetterElement = document.getElementById('changing-letter');
-            // ИСПРАВЛЕННЫЙ МАССИВ СЛОВ (с маленькой буквы)
             const wordsToAnimate = [
                 { text: "общение.", letter: "е" }, { text: "идеи.", letter: "и" },
                 { text: "проекты.", letter: "и" }, { text: "знание.", letter: "е" },
@@ -343,23 +286,6 @@
                 setTimeout(type, typeTimeout);
             }
             type();
-
-            // Управление мобильным меню
-            const hamburger = document.querySelector('.hamburger-menu');
-            const mobileNav = document.querySelector('.mobile-nav');
-            const navLinks = mobileNav.querySelectorAll('a');
-
-            hamburger.addEventListener('click', () => {
-                hamburger.classList.toggle('active');
-                mobileNav.classList.toggle('active');
-            });
-
-            navLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    hamburger.classList.remove('active');
-                    mobileNav.classList.remove('active');
-                });
-            });
         });
     </script>
 </body>
